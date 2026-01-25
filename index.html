@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Class Forge - Beta 1.3 (Paper Mode)</title>
+    <title>Class Forge - Beta 1.4</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
@@ -20,7 +18,6 @@
         body.boss-mode { background-color: #1a0505; background-image: linear-gradient(335deg, #2a0000 23px, transparent 23px), linear-gradient(155deg, #2a0000 23px, transparent 23px); box-shadow: inset 0 0 150px #ff0000; }
         h1, h2, h3 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
 
-        /* CONFETTI & TORCH */
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
         .torch-container { position: fixed; top: 20%; width: 100px; height: 300px; z-index: 0; pointer-events: none; }
         .torch-left { left: 20px; } .torch-right { right: 20px; }
@@ -28,13 +25,16 @@
         .torch-handle { width: 10px; height: 100px; background: #444; position: absolute; left: 45px; top: 40px; background: linear-gradient(90deg, #222, #555, #222); transform: perspective(10px) rotateX(5deg); }
         @keyframes flicker { 0% { transform: scale(1) skewX(-2deg); opacity: 0.9; } 100% { transform: scale(0.95) skewX(-1deg); opacity: 0.8; } }
 
-        /* UI ELEMENTS */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .login-box { width: 300px; padding: 40px; text-align: center; border: 1px solid #333; background: linear-gradient(180deg, #111, #050505); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         
-        .hud-bar { position: fixed; top: 10px; right: 10px; z-index: 1000; background: rgba(0,0,0,0.9); padding: 8px 12px; border: 2px solid var(--gold); border-radius: 4px; display: none; align-items: center; gap: 8px; }
-        .hp-track { width: 120px; height: 10px; background: #222; border: 1px solid #555; transform: skewX(-10deg); }
+        /* HUD ATUALIZADO */
+        .hud-bar { position: fixed; top: 10px; right: 10px; z-index: 1000; background: rgba(0,0,0,0.9); padding: 5px 12px; border: 2px solid var(--gold); border-radius: 4px; display: none; align-items: center; gap: 15px; }
+        .hp-container { display: flex; align-items: center; gap: 8px; }
+        .hp-track { width: 100px; height: 10px; background: #222; border: 1px solid #555; transform: skewX(-10deg); }
         .hp-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #c0392b, #e74c3c); transition: width 0.4s ease-out; }
+        .menu-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; font-size: 0.8rem; cursor: pointer; border-radius: 4px; font-family: 'Cinzel', serif; }
+        .menu-btn:hover { background: rgba(212, 175, 55, 0.2); }
 
         .config-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 15px; overflow-y: auto; }
         .config-box { width: 100%; max-width: 500px; padding: 20px; background: #111; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
@@ -44,7 +44,7 @@
         .btn-main:hover { filter: brightness(1.1); transform: scale(1.02); }
         .btn-sec { background: #222; border-color: #444; color: #aaa; font-size: 0.9rem; margin-top: 10px; }
 
-        .dashboard-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; z-index: 3000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .dashboard-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); }
         .dash-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
         .stat-card { background: #151515; padding: 20px; border: 1px solid #333; text-align: center; }
@@ -107,19 +107,22 @@
             <input type="email" placeholder="E-mail" value="professor@escola.com">
             <input type="password" placeholder="Senha" value="********">
             <button class="btn-main" onclick="performLogin()">ENTRAR</button>
-            <p style="color:#444; font-size:0.8rem; margin-top:20px;">Beta 1.3 - Paper Mode</p>
+            <p style="color:#444; font-size:0.8rem; margin-top:20px;">Beta 1.4 - Fixed</p>
         </div>
     </div>
 
     <div id="game-hud" class="hud-bar">
-        <span style="font-family:'Cinzel'; color:var(--gold); font-size:0.8rem;">HP</span>
-        <div class="hp-track"><div id="hp-bar" class="hp-fill"></div></div>
-        <span id="hp-text" style="font-size:0.8rem;">100</span>
+        <div class="hp-container">
+            <span style="font-family:'Cinzel'; color:var(--gold); font-size:0.8rem;">HP</span>
+            <div class="hp-track"><div id="hp-bar" class="hp-fill"></div></div>
+            <span id="hp-text" style="font-size:0.8rem;">100</span>
+        </div>
+        <button class="menu-btn" onclick="showDashboard()">⚙️ MENU</button>
     </div>
 
     <div id="config-screen" class="config-overlay">
         <h1 style="color: var(--gold); text-align: center; margin-bottom: 5px; font-size: 2rem;">CLASS FORGE</h1>
-        <p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;">PAINEL BETA 1.3</p>
+        <p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;">PAINEL BETA 1.4</p>
         <div class="config-box">
             <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📜 Matéria</label>
             <select id="subject">
@@ -156,13 +159,13 @@
     </div>
 
     <div id="dashboard" class="dashboard-overlay">
-        <div class="dash-header"><h2 style="margin:0; color:var(--gold)">Relatório: 3º B</h2><button onclick="hideDashboard()" style="background:none; border:1px solid #444; color:#fff; padding:5px 15px; border-radius:4px;">Fechar</button></div>
+        <div class="dash-header"><h2 style="margin:0; color:var(--gold)">Painel de Controle</h2><button onclick="hideDashboard()" style="background:none; border:1px solid #444; color:#fff; padding:5px 15px; border-radius:4px;">Voltar ao Jogo</button></div>
+        
+        <button class="btn-main" style="margin-bottom: 20px;" onclick="generatePDF()">🖨️ BAIXAR PROVA E GABARITO (PDF)</button>
+        <button class="btn-sec" style="width:100%; padding:15px; margin-bottom:30px;" onclick="location.reload()">🔄 REINICIAR JOGO</button>
+
+        <h3 style="color:#666; margin-bottom:15px; border-left:3px solid var(--gold); padding-left:10px;">Estatísticas da Turma</h3>
         <div class="stat-grid"><div class="stat-card"><div class="stat-num">85%</div><div class="stat-label">Engajamento</div></div><div class="stat-card"><div class="stat-num grade-good">9.2</div><div class="stat-label">Média</div></div></div>
-        
-        <button class="btn-main" style="margin-bottom: 30px;" onclick="generatePDF()">🖨️ BAIXAR PROVA E GABARITO (PDF)</button>
-        
-        <h3 style="color:#666; margin-bottom:15px; border-left:3px solid var(--gold); padding-left:10px;">Desempenho</h3>
-        <table class="student-list"><thead><tr><th>Aluno</th><th>Status</th><th>Nota</th></tr></thead><tbody><tr><td>Ana</td><td style="color:var(--green)">Concluído</td><td class="grade-good">10.0</td></tr><tr><td>Bruno</td><td style="color:var(--green)">Concluído</td><td class="grade-good">8.5</td></tr><tr><td>Carla</td><td style="color:orange">Jogando</td><td>-</td></tr></tbody></table>
     </div>
 
     <div id="game-area"><div id="map-container" class="map-flex"></div></div>
@@ -175,7 +178,6 @@
     </div>
 
 <script>
-    // --- AUDIO & MUSIC ENGINE ---
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     let musicInterval = null;
 
@@ -206,7 +208,6 @@
         else if (type === 'error') { osc.type='sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now+0.3); osc.start(now); osc.stop(now+0.3); }
     }
 
-    // --- CONFETTI ---
     const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d');
     let confetti = [];
     function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -214,7 +215,6 @@
     function startConfetti() { canvas.style.display = 'block'; confetti = Array.from({length: 150}, () => ({ x: Math.random() * canvas.width, y: -Math.random() * canvas.height, color: `hsl(${Math.random()*360}, 100%, 50%)`, size: Math.random()*10+5, speed: Math.random()*3+2, angle: Math.random()*6.2 })); requestAnimationFrame(updateConfetti); }
     function updateConfetti() { ctx.clearRect(0,0,canvas.width,canvas.height); confetti.forEach(p => { p.y += p.speed; p.x += Math.sin(p.angle)*2; p.angle += 0.1; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); if(p.y > canvas.height) p.y = -10; }); if(canvas.style.display === 'block') requestAnimationFrame(updateConfetti); }
 
-    // --- GAME STATE ---
     let playerHP = 100; let adventureData = []; let currentEnemyIndex = -1; let isBusy = false;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -227,72 +227,34 @@
     function showDashboard() { document.getElementById('dashboard').style.display = 'flex'; }
     function hideDashboard() { document.getElementById('dashboard').style.display = 'none'; }
 
-    // --- PDF GENERATOR (NEW FEATURE) ---
     async function generatePDF() {
         if (!adventureData || adventureData.length === 0) { alert("⚠️ Gere o jogo com a IA primeiro!"); return; }
-        
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const date = new Date().toLocaleDateString('pt-BR');
         
-        // PÁGINA DO ALUNO
         doc.setFontSize(18); doc.text("CLASS FORGE - ATIVIDADE IMPRESSA", 10, 20);
         doc.setFontSize(12); doc.text(`Data: ${date}   |   Aluno: _______________________`, 10, 30);
-        
         let y = 45;
         adventureData.forEach((node, i) => {
-            if (y > 270) { doc.addPage(); y = 20; } // Quebra de página
-            
-            doc.setFontSize(12); doc.setFont("helvetica", "bold");
-            doc.text(`Questão ${i+1}: ${node.title}`, 10, y);
-            y += 7;
-            
+            if (y > 270) { doc.addPage(); y = 20; }
+            doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text(`Questão ${i+1}: ${node.title}`, 10, y); y += 7;
             doc.setFont("helvetica", "normal"); doc.setFontSize(10);
-            const question = doc.splitTextToSize(node.quiz.question, 180);
-            doc.text(question, 10, y);
-            y += question.length * 5 + 5;
-            
-            // Opções
-            if(node.quiz.options && node.quiz.options.length > 0) {
-                node.quiz.options.forEach(opt => {
-                    doc.text(`[   ] ${opt}`, 15, y);
-                    y += 6;
-                });
-            } else {
-                doc.text("___________________________________________________", 15, y+5);
-                y += 10;
-            }
-            y += 10; // Espaço entre questões
-        });
-
-        // PÁGINA DO GABARITO (PROFESSOR)
-        doc.addPage();
-        doc.setFontSize(18); doc.text("GABARITO (USO DO PROFESSOR)", 10, 20);
-        y = 40;
-        
-        adventureData.forEach((node, i) => {
-            doc.setFontSize(12); doc.setFont("helvetica", "bold");
-            doc.text(`${i+1}. ${node.title}`, 10, y);
-            y += 7;
-            doc.setFont("helvetica", "normal");
-            
-            let correctText = "";
-            if(node.quiz.options && node.quiz.options.length > 0) {
-                correctText = node.quiz.options[node.quiz.correct];
-            } else {
-                correctText = node.quiz.correct; // Boss
-            }
-            
-            doc.setTextColor(0, 150, 0); // Verde
-            doc.text(`Resposta: ${correctText}`, 15, y);
-            doc.setTextColor(0, 0, 0); // Preto
+            const question = doc.splitTextToSize(node.quiz.question, 180); doc.text(question, 10, y); y += question.length * 5 + 5;
+            if(node.quiz.options && node.quiz.options.length > 0) { node.quiz.options.forEach(opt => { doc.text(`[   ] ${opt}`, 15, y); y += 6; }); } else { doc.text("___________________________________________________", 15, y+5); y += 10; }
             y += 10;
         });
-
+        doc.addPage();
+        doc.setFontSize(18); doc.text("GABARITO (USO DO PROFESSOR)", 10, 20); y = 40;
+        adventureData.forEach((node, i) => {
+            doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text(`${i+1}. ${node.title}`, 10, y); y += 7;
+            doc.setFont("helvetica", "normal");
+            let correctText = (node.quiz.options && node.quiz.options.length > 0) ? node.quiz.options[node.quiz.correct] : node.quiz.correct;
+            doc.setTextColor(0, 150, 0); doc.text(`Resposta: ${correctText}`, 15, y); doc.setTextColor(0, 0, 0); y += 10;
+        });
         doc.save("class_forge_prova.pdf");
     }
 
-    // --- PDF READER ---
     async function readPDF(file) {
         try { const arrayBuffer = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise; let fullText = ""; const maxPages = Math.min(pdf.numPages, 5); for (let i = 1; i <= maxPages; i++) { const page = await pdf.getPage(i); fullText += (await page.getTextContent()).items.map(i => i.str).join(" ") + " "; } return fullText; } catch (e) { return ""; }
     }
@@ -321,7 +283,18 @@
                 });
                 const data = await response.json();
                 adventureData = JSON.parse(cleanJSON(data.candidates[0].content.parts[0].text));
-                while (adventureData.length < totalStages) { adventureData.push(JSON.parse(JSON.stringify(adventureData[adventureData.length-1]))); }
+                
+                // --- TRAVA DE SEGURANÇA E CORREÇÃO DO BOSS ---
+                while (adventureData.length < totalStages) { 
+                    adventureData.push(JSON.parse(JSON.stringify(adventureData[adventureData.length-1]))); 
+                }
+                // FORÇA O ÚLTIMO ITEM A SER BOSS (CORREÇÃO DE BUG)
+                if (adventureData.length > 0) {
+                    adventureData[adventureData.length - 1].type = 'boss';
+                    if (!adventureData[adventureData.length - 1].title.toLowerCase().includes('boss')) {
+                        adventureData[adventureData.length - 1].title = "BOSS FINAL";
+                    }
+                }
 
             } else {
                 await new Promise(r => setTimeout(r, 1500));
