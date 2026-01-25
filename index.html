@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Class Forge - Beta 1.1 (Freedom)</title>
+    <title>Class Forge - Beta 1.2</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
         body.boss-mode { background-color: #1a0505; background-image: linear-gradient(335deg, #2a0000 23px, transparent 23px), linear-gradient(155deg, #2a0000 23px, transparent 23px); box-shadow: inset 0 0 150px #ff0000; }
         h1, h2, h3 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
 
-        /* CONFETTI CANVAS */
+        /* CONFETTI */
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
 
         /* TORCH */
@@ -27,7 +27,7 @@
         .torch-handle { width: 10px; height: 100px; background: #444; position: absolute; left: 45px; top: 40px; background: linear-gradient(90deg, #222, #555, #222); transform: perspective(10px) rotateX(5deg); }
         @keyframes flicker { 0% { transform: scale(1) skewX(-2deg); opacity: 0.9; } 100% { transform: scale(0.95) skewX(-1deg); opacity: 0.8; } }
 
-        /* UI ELEMENTS */
+        /* UI */
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .login-box { width: 300px; padding: 40px; text-align: center; border: 1px solid #333; background: linear-gradient(180deg, #111, #050505); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         
@@ -96,7 +96,6 @@
 <body>
 
     <canvas id="confetti-canvas"></canvas>
-
     <div class="torch-container torch-left"><div class="torch-flame"></div><div class="torch-handle"></div></div>
     <div class="torch-container torch-right"><div class="torch-flame"></div><div class="torch-handle"></div></div>
 
@@ -104,10 +103,10 @@
         <h1 style="color: var(--gold); font-size: 3rem; margin-bottom: 10px;">CLASS FORGE</h1>
         <div class="login-box">
             <h3 style="color:#666; margin-bottom: 20px; font-family: Roboto;">ACESSO RESTRITO</h3>
-            <input type="email" placeholder="E-mail Institucional" value="professor@escola.com">
+            <input type="email" placeholder="E-mail" value="professor@escola.com">
             <input type="password" placeholder="Senha" value="********">
-            <button class="btn-main" onclick="performLogin()">ENTRAR NO SISTEMA</button>
-            <p style="color:#444; font-size:0.8rem; margin-top:20px;">Beta 1.1 - Freedom</p>
+            <button class="btn-main" onclick="performLogin()">ENTRAR</button>
+            <p style="color:#444; font-size:0.8rem; margin-top:20px;">Beta 1.2 - All Rights Reserved</p>
         </div>
     </div>
 
@@ -119,7 +118,7 @@
 
     <div id="config-screen" class="config-overlay">
         <h1 style="color: var(--gold); text-align: center; margin-bottom: 5px; font-size: 2rem;">CLASS FORGE</h1>
-        <p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;">PAINEL BETA 1.1</p>
+        <p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;">PAINEL BETA 1.2</p>
         <div class="config-box">
             <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📜 Matéria</label>
             <select id="subject">
@@ -137,12 +136,12 @@
             </select>
             <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📂 Texto ou PDF</label>
             <input type="file" id="fileInput" accept=".pdf, .txt">
-            <textarea id="classContent" placeholder="Ou cole o texto aqui..."></textarea>
+            <textarea id="classContent" placeholder="Cole texto aqui se preferir..."></textarea>
             <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">⚔️ Dificuldade</label>
             <select id="difficulty">
-                <option value="3">Rápido (3 Salas)</option>
-                <option value="5" selected>Normal (5 Salas)</option>
-                <option value="7">Longo (7 Salas)</option>
+                <option value="3">Rápido (3 Fases)</option>
+                <option value="5" selected>Normal (5 Fases)</option>
+                <option value="7">Longo (7 Fases)</option>
             </select>
             <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">🔑 API Key (Gemini)</label>
             <input type="password" id="apiKey" placeholder="Cole sua chave aqui">
@@ -151,21 +150,15 @@
             <button class="btn-main btn-sec" onclick="initGame(false)">MODO DEMO</button>
         </div>
         <div id="loading" class="hidden" style="margin-top: 20px; text-align: center;">
-            <div class="loader">⚙️</div><p style="color: var(--gold);">Gerando Masmorra...</p>
+            <div class="loader">⚙️</div><p style="color: var(--gold);">Calculando Fases...</p>
         </div>
     </div>
 
     <div id="dashboard" class="dashboard-overlay">
         <div class="dash-header"><h2 style="margin:0; color:var(--gold)">Relatório: 3º B</h2><button onclick="hideDashboard()" style="background:none; border:1px solid #444; color:#fff; padding:5px 15px; border-radius:4px;">Fechar</button></div>
-        <div class="stat-grid">
-            <div class="stat-card"><div class="stat-num">85%</div><div class="stat-label">Engajamento</div></div>
-            <div class="stat-card"><div class="stat-num grade-good">9.2</div><div class="stat-label">Média da Turma</div></div>
-        </div>
-        <h3 style="color:#666; margin-bottom:15px; border-left:3px solid var(--gold); padding-left:10px;">Desempenho Individual</h3>
-        <table class="student-list">
-            <thead><tr><th>Aluno</th><th>Status</th><th>Nota</th></tr></thead>
-            <tbody><tr><td>Ana Silva</td><td style="color:var(--green)">Concluído</td><td class="grade-good">10.0</td></tr><tr><td>Bruno Souza</td><td style="color:var(--green)">Concluído</td><td class="grade-good">8.5</td></tr><tr><td>Carla Diaz</td><td style="color:orange">Em Andamento</td><td>-</td></tr><tr><td>Daniel Rocha</td><td style="color:var(--red)">Falhou</td><td class="grade-bad">4.0</td></tr></tbody>
-        </table>
+        <div class="stat-grid"><div class="stat-card"><div class="stat-num">85%</div><div class="stat-label">Engajamento</div></div><div class="stat-card"><div class="stat-num grade-good">9.2</div><div class="stat-label">Média</div></div></div>
+        <h3 style="color:#666; margin-bottom:15px; border-left:3px solid var(--gold); padding-left:10px;">Desempenho</h3>
+        <table class="student-list"><thead><tr><th>Aluno</th><th>Status</th><th>Nota</th></tr></thead><tbody><tr><td>Ana</td><td style="color:var(--green)">Concluído</td><td class="grade-good">10.0</td></tr><tr><td>Bruno</td><td style="color:var(--green)">Concluído</td><td class="grade-good">8.5</td></tr><tr><td>Carla</td><td style="color:orange">Jogando</td><td>-</td></tr></tbody></table>
     </div>
 
     <div id="game-area"><div id="map-container" class="map-flex"></div></div>
@@ -181,119 +174,40 @@
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     let musicInterval = null;
 
-    // --- FREEDOM LEITMOTIF SEQUENCER (CHAOS/JEVIL STYLE) ---
     function playBossMusic() {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         if (musicInterval) clearInterval(musicInterval);
-        
         let noteIndex = 0;
-        // Sequência baseada no leitmotif "Freedom/World Revolving" (Aproximada)
-        // Notas rápidas em escala de Fá menor/caótica
-        const freedomMotif = [
-            {f: 349.23, d: 0.15}, // F4
-            {f: 415.30, d: 0.15}, // Ab4
-            {f: 466.16, d: 0.15}, // Bb4
-            {f: 523.25, d: 0.15}, // C5
-            {f: 554.37, d: 0.15}, // Db5
-            {f: 523.25, d: 0.15}, // C5
-            {f: 466.16, d: 0.15}, // Bb4
-            {f: 415.30, d: 0.15}, // Ab4
-            {f: 349.23, d: 0.15}, // F4
-            {f: 415.30, d: 0.15}, // Ab4
-            {f: 523.25, d: 0.15}, // C5
-            {f: 466.16, d: 0.15}  // Bb4
-        ];
-
-        let timePerNote = 150; // ms
-
+        const freedomMotif = [{f: 349.23, d: 0.15}, {f: 415.30, d: 0.15}, {f: 466.16, d: 0.15}, {f: 523.25, d: 0.15}, {f: 554.37, d: 0.15}, {f: 523.25, d: 0.15}, {f: 466.16, d: 0.15}, {f: 415.30, d: 0.15}, {f: 349.23, d: 0.15}, {f: 415.30, d: 0.15}, {f: 523.25, d: 0.15}, {f: 466.16, d: 0.15}];
         musicInterval = setInterval(() => {
             const now = audioCtx.currentTime;
             const noteData = freedomMotif[noteIndex % freedomMotif.length];
-            
-            // Lead Synth (Trompete Digital)
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sawtooth'; // Onda agressiva
-            osc.frequency.value = noteData.f;
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + noteData.d);
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = 'sawtooth'; osc.frequency.value = noteData.f; osc.connect(gain); gain.connect(audioCtx.destination);
+            gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.01, now + noteData.d);
             osc.start(now); osc.stop(now + noteData.d);
-
-            // Bass (Oitava abaixo)
-            if (noteIndex % 4 === 0) {
-                const bass = audioCtx.createOscillator();
-                const bGain = audioCtx.createGain();
-                bass.type = 'square';
-                bass.frequency.value = noteData.f / 2; // Oitava abaixo
-                bass.connect(bGain);
-                bGain.connect(audioCtx.destination);
-                bGain.gain.setValueAtTime(0.05, now);
-                bGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                bass.start(now); bass.stop(now + 0.3);
-            }
-
+            if (noteIndex % 4 === 0) { const bass = audioCtx.createOscillator(); const bGain = audioCtx.createGain(); bass.type = 'square'; bass.frequency.value = noteData.f / 2; bass.connect(bGain); bGain.connect(audioCtx.destination); bGain.gain.setValueAtTime(0.05, now); bGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3); bass.start(now); bass.stop(now + 0.3); }
             noteIndex++;
-        }, timePerNote);
+        }, 150);
     }
-
     function stopBossMusic() { if (musicInterval) { clearInterval(musicInterval); musicInterval = null; } }
-
     function playSound(type) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
-
-        if (type === 'click') {
-            osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-            gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            osc.start(now); osc.stop(now + 0.1);
-        } else if (type === 'win') {
-            [523.25, 659.25, 783.99].forEach((freq, i) => {
-                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-                o.connect(g); g.connect(audioCtx.destination); o.type='triangle'; o.frequency.value=freq;
-                g.gain.setValueAtTime(0.1, now+i*0.1); g.gain.exponentialRampToValueAtTime(0.01, now+i*0.1+0.5);
-                o.start(now+i*0.1); o.stop(now+i*0.1+0.5);
-            });
-        } else if (type === 'error') {
-            osc.type='sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3);
-            gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now+0.3);
-            osc.start(now); osc.stop(now+0.3);
-        }
+        if (type === 'click') { osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(300, now + 0.1); gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1); osc.start(now); osc.stop(now + 0.1); }
+        else if (type === 'win') { [523.25, 659.25, 783.99].forEach((freq, i) => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type='triangle'; o.frequency.value=freq; g.gain.setValueAtTime(0.1, now+i*0.1); g.gain.exponentialRampToValueAtTime(0.01, now+i*0.1+0.5); o.start(now+i*0.1); o.stop(now+i*0.1+0.5); }); }
+        else if (type === 'error') { osc.type='sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now+0.3); osc.start(now); osc.stop(now+0.3); }
     }
 
-    // --- CONFETTI ENGINE ---
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById('confetti-canvas'); const ctx = canvas.getContext('2d');
     let confetti = [];
-    
     function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    function startConfetti() { canvas.style.display = 'block'; confetti = Array.from({length: 150}, () => ({ x: Math.random() * canvas.width, y: -Math.random() * canvas.height, color: `hsl(${Math.random()*360}, 100%, 50%)`, size: Math.random()*10+5, speed: Math.random()*3+2, angle: Math.random()*6.2 })); requestAnimationFrame(updateConfetti); }
+    function updateConfetti() { ctx.clearRect(0,0,canvas.width,canvas.height); confetti.forEach(p => { p.y += p.speed; p.x += Math.sin(p.angle)*2; p.angle += 0.1; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); if(p.y > canvas.height) p.y = -10; }); if(canvas.style.display === 'block') requestAnimationFrame(updateConfetti); }
 
-    function startConfetti() {
-        canvas.style.display = 'block';
-        confetti = Array.from({length: 150}, () => ({
-            x: Math.random() * canvas.width, y: -Math.random() * canvas.height,
-            color: `hsl(${Math.random()*360}, 100%, 50%)`, size: Math.random()*10+5,
-            speed: Math.random()*3+2, angle: Math.random()*6.2
-        }));
-        requestAnimationFrame(updateConfetti);
-    }
-
-    function updateConfetti() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        confetti.forEach(p => {
-            p.y += p.speed; p.x += Math.sin(p.angle)*2; p.angle += 0.1;
-            ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size);
-            if(p.y > canvas.height) p.y = -10;
-        });
-        if(canvas.style.display === 'block') requestAnimationFrame(updateConfetti);
-    }
-
-    // --- GAME LOGIC ---
     let playerHP = 100; let adventureData = []; let currentEnemyIndex = -1; let isBusy = false;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -307,38 +221,18 @@
     function hideDashboard() { document.getElementById('dashboard').style.display = 'none'; }
 
     async function readPDF(file) {
-        try {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let fullText = "";
-            const maxPages = Math.min(pdf.numPages, 5);
-            for (let i = 1; i <= maxPages; i++) {
-                const page = await pdf.getPage(i);
-                fullText += (await page.getTextContent()).items.map(i => i.str).join(" ") + " ";
-            }
-            return fullText;
-        } catch (e) { return ""; }
+        try { const arrayBuffer = await file.arrayBuffer(); const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise; let fullText = ""; const maxPages = Math.min(pdf.numPages, 5); for (let i = 1; i <= maxPages; i++) { const page = await pdf.getPage(i); fullText += (await page.getTextContent()).items.map(i => i.str).join(" ") + " "; } return fullText; } catch (e) { return ""; }
     }
+    document.getElementById('fileInput').addEventListener('change', async function(e) { const file = e.target.files[0]; if (file && file.type === "application/pdf") { document.getElementById('classContent').value = "⏳ Lendo PDF..."; document.getElementById('classContent').value = await readPDF(file); } });
 
-    document.getElementById('fileInput').addEventListener('change', async function(e) {
-        const file = e.target.files[0];
-        if (file && file.type === "application/pdf") {
-            document.getElementById('classContent').value = "⏳ Lendo PDF...";
-            document.getElementById('classContent').value = await readPDF(file);
-        }
-    });
-
-    function cleanJSON(text) {
-        const firstBracket = text.indexOf('['); const lastBracket = text.lastIndexOf(']');
-        if (firstBracket === -1 || lastBracket === -1) throw new Error("A IA não retornou uma lista válida.");
-        return text.substring(firstBracket, lastBracket + 1);
-    }
+    function cleanJSON(text) { const firstBracket = text.indexOf('['); const lastBracket = text.lastIndexOf(']'); if (firstBracket === -1 || lastBracket === -1) throw new Error("A IA não retornou uma lista válida."); return text.substring(firstBracket, lastBracket + 1); }
 
     async function initGame(useRealAI) {
         try {
             const content = document.getElementById('classContent').value;
             const apiKey = document.getElementById('apiKey').value;
-            const difficulty = parseInt(document.getElementById('difficulty').value);
+            // FIX DA QUANTIDADE: Pega o valor exato (3, 5 ou 7)
+            const totalStages = parseInt(document.getElementById('difficulty').value);
             const subject = document.getElementById('subject').value;
 
             if (subject === "" && (!content || content.length < 10 || content === "⏳ Lendo PDF...")) { alert("⚠️ Para MODO LIVRE, insira um PDF ou texto."); return; }
@@ -347,20 +241,42 @@
             document.querySelector('.config-box').classList.add('hidden');
             document.getElementById('loading').classList.remove('hidden');
 
-            const enemiesCount = difficulty - 1;
-
             if (useRealAI) {
                 let context = subject === "" ? `Baseie-se ESTRITAMENTE neste texto: "${content.substring(0, 3000)}"` : `Matéria: ${subject}. Texto apoio: "${content.substring(0, 2000)}"`;
-                const prompt = `ATUE COMO MESTRE DE RPG. ${context} REGRAS: 1. GERE LORE ENVOLVENTE ('desc'). 2. RIGOR FACTUAL ABSOLUTO (Verifique contas e fatos). 3. GERE 3 MODOS (Quiz, Magic, Stealth). 4. JSON PURO. Formato: [{"title": "Inimigo", "type": "enemy", "desc": "...", "quiz": {"question": "...", "options": ["A","B","C"], "correct": 1}, "magic": {"statement": "...", "is_true": true}, "stealth": {"phrase": "Frase curta"}}, {"title": "Boss", "type": "boss", "desc": "...", "quiz": {"question": "...", "options": [], "correct": "..."}}]`;
+                // FIX DA QUANTIDADE NO PROMPT: "EXATAMENTE ${totalStages}"
+                // FIX DA FURTIVIDADE: Pedindo "hint"
+                const prompt = `ATUE COMO MESTRE DE RPG. ${context} 
+                OBJETIVO: Gerar lista JSON com EXATAMENTE ${totalStages} objetos. (O último deve ser 'type: boss').
+                
+                REGRAS: 
+                1. 'desc': Lore envolvente.
+                2. RIGOR FACTUAL: Verifique fatos e contas.
+                3. STEALTH UPDATE: Adicione campo 'hint' (Contexto/Pergunta) e 'phrase' (Resposta curta).
+                
+                FORMATO JSON: 
+                [
+                    {"title": "Inimigo", "type": "enemy", "desc": "...", 
+                     "quiz": {"question": "...", "options": ["A","B","C"], "correct": 1}, 
+                     "magic": {"statement": "...", "is_true": true}, 
+                     "stealth": {"hint": "Contexto da frase...", "phrase": "Frase resposta"}
+                    }, 
+                    ... (Total de ${totalStages} itens)
+                ]`;
                 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                     method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
                 const data = await response.json();
                 adventureData = JSON.parse(cleanJSON(data.candidates[0].content.parts[0].text));
+                
+                // Trava de Segurança: Se vier menos, duplica o ultimo até dar o total
+                while (adventureData.length < totalStages) {
+                    adventureData.push(JSON.parse(JSON.stringify(adventureData[adventureData.length-1])));
+                }
+
             } else {
                 await new Promise(r => setTimeout(r, 1500));
-                adventureData = getDemoData(difficulty);
+                adventureData = getDemoData(totalStages);
             }
 
             document.getElementById('config-screen').classList.add('hidden');
@@ -419,8 +335,14 @@
         } else if (mode === 'magic') {
             html += `<p class="question-text" style="text-align:center;">"${node.magic.statement}"</p><button class="btn-main" onclick="checkMagic(true, ${node.magic.is_true})">VERDADEIRO</button><button class="btn-main" style="background:#222;margin-top:15px;" onclick="checkMagic(false, ${node.magic.is_true})">FALSO</button>`;
         } else if (mode === 'stealth') {
-            const phrase = node.stealth.phrase; const shuffled = phrase.split(' ').sort(() => Math.random() - 0.5);
-            html += `<p style="text-align:center;color:#888;">Monte a frase:</p><div class="answer-area" id="puzzle-answer"></div><div class="word-bank" id="puzzle-bank"></div><button class="btn-main" id="check-puzzle-btn" onclick="checkPuzzle('${phrase}')" style="opacity:0.5;margin-top:20px;">HACKEAR</button>`;
+            const phrase = node.stealth.phrase; 
+            const hint = node.stealth.hint || "Organize a frase corretamente:"; // Fallback se não tiver hint
+            const shuffled = phrase.split(' ').sort(() => Math.random() - 0.5);
+            // DISPLAY DA DICA (HINT)
+            html += `<p style="text-align:center;color:#gold;font-style:italic;margin-bottom:10px;">"${hint}"</p>
+                     <div class="answer-area" id="puzzle-answer"></div>
+                     <div class="word-bank" id="puzzle-bank"></div>
+                     <button class="btn-main" id="check-puzzle-btn" onclick="checkPuzzle('${phrase}')" style="opacity:0.5;margin-top:20px;">HACKEAR</button>`;
             setTimeout(() => { const bank = document.getElementById('puzzle-bank'); shuffled.forEach(w => { const span = document.createElement('span'); span.className = 'word-slot'; span.innerText = w; span.onclick = function() { moveWord(this); }; bank.appendChild(span); }); }, 50);
         }
         
@@ -452,7 +374,7 @@
     }
     function updateHP(amt) { playerHP += amt; if(playerHP < 0) playerHP = 0; document.getElementById('hp-bar').style.width = playerHP + '%'; document.getElementById('hp-text').innerText = playerHP; if (playerHP === 0) { alert("💀 GAME OVER! Tente novamente."); location.reload(); } }
     function closeModal() { document.body.classList.remove('boss-mode'); stopBossMusic(); document.getElementById('battle-modal').style.display = 'none'; }
-    function getDemoData(d) { return Array(d).fill(0).map((_, i) => ({ title: i===d-1?"Rei do Caos":"Inimigo", desc: "Lore de teste...", type: i===d-1?"boss":"enemy", completed: false, quiz: { question: "1+1?", options: ["2","3"], correct: 0 }, magic: { statement: "Sol é gelado?", is_true: false }, stealth: { phrase: "Eu sou legal" } })); }
+    function getDemoData(d) { return Array(d).fill(0).map((_, i) => ({ title: i===d-1?"Rei do Caos":"Inimigo", desc: "Lore de teste...", type: i===d-1?"boss":"enemy", completed: false, quiz: { question: "1+1?", options: ["2","3"], correct: 0 }, magic: { statement: "Sol é gelado?", is_true: false }, stealth: { phrase: "Eu sou legal", hint: "Quem sou eu?" } })); }
 </script>
 </body>
 </html>
